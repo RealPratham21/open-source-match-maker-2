@@ -1,8 +1,9 @@
 function required(name: string, value: string | undefined) {
-  if (!value) {
+  const normalized = value?.trim().replace(/^(['"])(.*)\1$/, '$2')
+  if (!normalized) {
     throw new Error(`Missing ${name}. Add it to frontend/.env.local`)
   }
-  return value
+  return normalized
 }
 
 export function getSupabaseUrl() {
