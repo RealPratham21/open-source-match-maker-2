@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { LogOut, Menu, X } from 'lucide-react'
 import { Logo } from '@/components/logo'
-import { createClient } from '@/lib/supabase/client'
+import { useSupabase } from '@/components/supabase-provider'
 import { initials } from '@/lib/identity'
 
 const navItems = [
@@ -23,6 +23,7 @@ export function AppHeader({
 }) {
   const pathname = usePathname()
   const router = useRouter()
+  const supabase = useSupabase()
   const [menuOpen, setMenuOpen] = useState(false)
   const [accountOpen, setAccountOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
@@ -31,7 +32,6 @@ export function AppHeader({
   async function signOut() {
     setSigningOut(true)
     try {
-      const supabase = createClient()
       await supabase.auth.signOut()
       router.push('/')
       router.refresh()
