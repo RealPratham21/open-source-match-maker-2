@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ChipToggle } from '@/components/chip-toggle'
 import { StatusMessage } from '@/components/status'
-import { createClient } from '@/lib/supabase/client'
+import { useSupabase } from '@/components/supabase-provider'
 import { saveOnboarding } from '@/lib/profile'
 import type { Profile } from '@/lib/supabase/types'
 import {
@@ -63,6 +63,7 @@ function fromProfile(profile: Profile | null): Draft {
 
 export function OnboardingForm({ profile }: { profile: Profile | null }) {
   const router = useRouter()
+  const supabase = useSupabase()
   const [step, setStep] = useState(1)
   const [draft, setDraft] = useState<Draft>(() => fromProfile(profile))
   const [error, setError] = useState('')
@@ -93,7 +94,6 @@ export function OnboardingForm({ profile }: { profile: Profile | null }) {
     setSaving(true)
     setError('')
     try {
-      const supabase = createClient()
       const {
         data: { user },
         error: userError,
