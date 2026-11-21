@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { GitBranch } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { StatusMessage } from '@/components/status'
-import { createClient } from '@/lib/supabase/client'
+import { useSupabase } from '@/components/supabase-provider'
 
 const ERRORS: Record<string, string> = {
   oauth: 'GitHub authorization was cancelled or failed. Please try again.',
@@ -15,6 +15,7 @@ const ERRORS: Record<string, string> = {
 }
 
 export function SignInForm({ errorCode }: { errorCode?: string }) {
+  const supabase = useSupabase()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState(errorCode ? ERRORS[errorCode] ?? 'Something went wrong while signing in.' : '')
 
@@ -22,7 +23,6 @@ export function SignInForm({ errorCode }: { errorCode?: string }) {
     setPending(true)
     setError('')
     try {
-      const supabase = createClient()
       const origin = window.location.origin
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: 'github',
